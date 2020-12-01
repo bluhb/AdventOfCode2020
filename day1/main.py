@@ -20,6 +20,7 @@ def FindSum3(Input, Sum):
             for Z in Input:
                 if (X + Y + Z) == Sum:
                     return X, Y, Z, X*Y*Z
+            Input.pop()
 
 def Solution1():
     print(FindSum(ReadInput(), Sum))
