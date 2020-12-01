@@ -27,5 +27,6 @@ def Solution1():
 def Solution2():
     print(FindSum3(ReadInput(), Sum))
 
+
 Solution1()
 Solution2()
