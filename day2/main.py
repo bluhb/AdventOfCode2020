@@ -22,11 +22,8 @@ def checkPassword(C):
         return False
 
 def checkPassword2(C):
-    if C[3][C[0]-1] == C[2] or C[3][C[1]-1] == C[2]:
-        if not (C[3][C[0]-1] == C[2] and C[3][C[1]-1] == C[2]):
-            return True
-        else:
-            return False
+    if (C[3][C[0]-1] == C[2]) != (C[3][C[1]-1] == C[2]):
+        return True
     else:
         return False
 
