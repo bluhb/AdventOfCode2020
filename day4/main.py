@@ -37,17 +37,17 @@ def checkKeysArePresent(Passport, KeysToCheck, solution = 1):
 
 def checkValue(Passport, Key):
     if Key == "byr":
-        Result = True if 1920 <= int(Passport[Key]) <= 2002 else False
+        Result = 1920 <= int(Passport[Key]) <= 2002
     elif Key == "iyr":
-        Result = True if 2010 <= int(Passport[Key]) <= 2020 else False
+        Result = 2010 <= int(Passport[Key]) <= 2020
     elif Key == "eyr":
-        Result = True if 2020 <= int(Passport[Key]) <= 2030 else False
+        Result = 2020 <= int(Passport[Key]) <= 2030
     elif Key == "hgt":
         Unit = Passport[Key][-2:]
         if Unit == "cm":
-            Result = True if 150 <= int(Passport[Key][:-2]) <= 193 else False
+            Result = 150 <= int(Passport[Key][:-2]) <= 193
         elif Unit == "in":
-            Result = True if 59 <= int(Passport[Key][:-2]) <= 76 else False
+            Result = 59 <= int(Passport[Key][:-2]) <= 76
         else:
             Result = False
     elif Key == "hcl":
@@ -60,9 +60,9 @@ def checkValue(Passport, Key):
         else:
             Result = False
     elif Key == "ecl":
-        Result = True if Passport[Key] in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"] else False
+        Result = Passport[Key] in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
     elif Key == "pid":
-        Result = True if len(Passport[Key]) == 9 and Passport[Key].isnumeric else False
+        Result = len(Passport[Key]) == 9 and Passport[Key].isnumeric()
     else:
         raise ValueError("Unexpected Key")
         Result = None
