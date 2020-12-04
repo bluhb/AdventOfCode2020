@@ -37,31 +37,36 @@ def checkKeysArePresent(Passport, KeysToCheck, solution = 1):
 
 def checkValue(Passport, Key):
     if Key == "byr":
-        return True if 1920 <= int(Passport[Key]) <= 2002 else False
+        Result = True if 1920 <= int(Passport[Key]) <= 2002 else False
     elif Key == "iyr":
-        return True if 2010 <= int(Passport[Key]) <= 2020 else False
+        Result = True if 2010 <= int(Passport[Key]) <= 2020 else False
     elif Key == "eyr":
-        return True if 2020 <= int(Passport[Key]) <= 2030 else False
+        Result = True if 2020 <= int(Passport[Key]) <= 2030 else False
     elif Key == "hgt":
         Unit = Passport[Key][-2:]
         if Unit == "cm":
-            return True if 150 <= int(Passport[Key][:-2]) <= 193 else False
+            Result = True if 150 <= int(Passport[Key][:-2]) <= 193 else False
         elif Unit == "in":
-            return True if 59 <= int(Passport[Key][:-2]) <= 76 else False
+            Result = True if 59 <= int(Passport[Key][:-2]) <= 76 else False
+        else:
+            Result = False
     elif Key == "hcl":
         if Passport[Key][0] == "#" and len(Passport[Key]) == 7:
             try:
                 int(Passport[Key][1:], 16)
-                return True
+                Result = True
             except ValueError:
-                return False
+                Result = False
+        else:
+            Result = False
     elif Key == "ecl":
-        return True if Passport[Key] in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"] else False
+        Result = True if Passport[Key] in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"] else False
     elif Key == "pid":
-        return True if len(Passport[Key]) == 9 and Passport[Key].isnumeric else False
+        Result = True if len(Passport[Key]) == 9 and Passport[Key].isnumeric else False
     else:
         raise ValueError("Unexpected Key")
-        return None
+        Result = None
+    return Result
 
 def solution1():
     KeysToCheck = ["ecl", "pid", "eyr", "hcl", "byr", "iyr", "hgt"]
