@@ -26,12 +26,12 @@ def splitInPassPorts(F):
 
     return Passports
 
-def checkKeysArePresent(Passport, KeysToCheck):
+def checkKeysArePresent(Passport, KeysToCheck, solution = 1):
     Keys = list(Passport.keys())
     for Key in KeysToCheck:
         if Key not in Keys:
             return False
-        if not checkValue(Passport, Key):
+        if not checkValue(Passport, Key) and solution == 2:
             return False
     return True
 
@@ -69,4 +69,13 @@ def solution1():
             Amount += 1
     print(Amount)
 
+def solution2():
+    KeysToCheck = ["ecl", "pid", "eyr", "hcl", "byr", "iyr", "hgt"]
+    Passports = splitInPassPorts(F)
+    Amount = 0
+    for Passport in Passports:
+        if checkKeysArePresent(Passport, KeysToCheck, 2):
+            Amount += 1
+    print(Amount)
 solution1()
+solution2()
