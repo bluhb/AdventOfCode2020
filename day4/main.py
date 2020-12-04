@@ -59,6 +59,9 @@ def checkValue(Passport, Key):
         return True if Passport[Key] in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"] else False
     elif Key == "pid":
         return True if len(Passport[Key]) == 9 and Passport[Key].isnumeric else False
+    else:
+        raise ValueError("Unexpected Key")
+        return None
 
 def solution1():
     KeysToCheck = ["ecl", "pid", "eyr", "hcl", "byr", "iyr", "hgt"]
