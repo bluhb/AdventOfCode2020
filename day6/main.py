@@ -7,7 +7,7 @@ def parseIntoAnswerLists(l):
     answers = []
     for x in l:
         if x != "":
-            answers.extend([char for char in x])
+            answers.extend(x)
         elif x == "":
             total_answers.append(answers)
             answers = []
@@ -21,7 +21,7 @@ def parseIntoAnswerLists2(l):
     answers = []
     for x in l:
         if x != "":
-            answers.append([char for char in x])
+            answers.append(list(x))
         elif x == "":
             total_answers.append(answers)
             answers = []
