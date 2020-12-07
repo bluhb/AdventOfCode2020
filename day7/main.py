@@ -18,13 +18,6 @@ def parseToRuleDict(r):
     rule_dict = {contain[0]: contain[1:]}
     return rule_dict
 
-def checkInt(c):
-    try:
-        int(c)
-        return True
-    except:
-        return False
-
 def searchLuggageBag(bags, my_bag, current_bag):
     if current_bag == my_bag:
         return 1
