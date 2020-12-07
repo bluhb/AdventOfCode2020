@@ -2,7 +2,7 @@ import FileRead
 import re
 f = FileRead.ReadInput("input.txt")
 
-re_search = re.compile("(?:(.+) bags contain)? (?:(?:(\d) (.+?) bags?)|no other bags)")
+re_search = re.compile("(?:(.+) bags contain)? (?:(?:(\d+) (.+?) bags?)|no other bags)")
 
 def parseToRuleDict(r):
     groups = re.findall(re_search, r)
