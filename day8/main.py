@@ -1,7 +1,7 @@
 import FileRead
 import re
 
-f = FileRead.ReadInput("input.txt")
+f = FileRead.ReadInput("inputpepijn.txt")
 
 def parseInput(f):
     opcodes = []
@@ -21,7 +21,7 @@ def solution1(instructions):
     while i < len(instructions):
         opcode = instructions[i][0]
         if instructions[i][2] > 0: #if the instruction was run before, terminate
-            break
+            return accumulator, None
         instructions[i][2] += 1
         if opcode == "nop":
             prevI = i
@@ -33,19 +33,27 @@ def solution1(instructions):
         elif opcode == "jmp":
             prevI = i
             i += instructions[i][1]
-    return prevI, accumulator
+    return accumulator, accumulator
 
 def solution2(codes):
+    jmp_nop_indexes = [codes.index(i) for i in codes if i[0] == "nop" or i[0] == "jmp"]
+    i = 0
+    accumulator = None
     instructions_copy = [x[:] for x in codes]
-    i_to_change, _ = solution1(instructions_copy)
-    opcode = codes[i_to_change]
-    codes[i_to_change][0] = "nop" if opcode[0] == "jmp" else "jmp"
-
-    _, accumulator = solution1(codes) #run the code again with the changed instructions
+    _, accumulator = solution1(instructions_copy)
+    while accumulator is None:
+        instructions_copy = [x[:] for x in codes]
+        opcode = instructions_copy[jmp_nop_indexes[i]]
+        instructions_copy[jmp_nop_indexes[i]][0] = "jpm" if opcode[0] == "nop" else "nop"
+        _, accumulator = solution1(instructions_copy)
+        i += 1
     return accumulator
 
+
+
+
 opcodes = parseInput(f)
-_, accumulator = solution1(opcodes)
+accumulator, _ = solution1(opcodes)
 print("solution1: {}".format(accumulator))
 
 opcodes = parseInput(f)
