@@ -1,7 +1,7 @@
 import FileRead
 import re
 
-f = FileRead.ReadInput("inputpepijn.txt")
+f = FileRead.ReadInput(input("Filename:\n"))
 
 def parseInput(f):
     opcodes = []
@@ -33,7 +33,7 @@ def solution1(instructions):
         elif opcode == "jmp":
             prevI = i
             i += instructions[i][1]
-    return accumulator, accumulator
+    return _, accumulator
 
 def solution2(codes):
     jmp_nop_indexes = [codes.index(i) for i in codes if i[0] == "nop" or i[0] == "jmp"]
