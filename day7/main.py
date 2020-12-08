@@ -2,6 +2,7 @@ import FileRead
 import re
 f = FileRead.ReadInput("input.txt")
 
+#regular expression to match bag name and bag contents
 re_search = re.compile("(?:(.+) bags contain)? (?:(?:(\d+) (.+?) bags?)|no other bags)")
 
 def parseToRuleDict(r):
