@@ -4,27 +4,23 @@ import re
 f = FileRead.ReadInput("input.txt")
 
 def parseInput(f):
-    instructions = []
+    opcodes = []
     search = re.compile("^(.+) (.+)")
     for l in f:
         instruct = re.findall(search, l) # find instruction + argument number
         instruct = [y for x in instruct for y in x] #convert the nested tuple to a list
         instruct[1] = int(instruct[1]) #convert the argument to int
         instruct.append(0) #add run counter
-        instructions.append(instruct)
-    return instructions
+        opcodes.append(instruct)
+    return opcodes
 
-def solution1():
-    global instructions
+def solution1(instructions):
     i = 0
     prevI = 0
     accumulator = 0
-
     while i < len(instructions):
         opcode = instructions[i][0]
         if instructions[i][2] > 0: #if the instruction was run before, terminate
-            print("terminated at {} with instructions {}".format(i, instructions[i]))
-            print("change instruction {} {}".format(prevI, instructions[prevI]))
             break
         instructions[i][2] += 1
         if opcode == "nop":
@@ -37,15 +33,21 @@ def solution1():
         elif opcode == "jmp":
             prevI = i
             i += instructions[i][1]
-    print("Accumulator is {}".format(accumulator))
+    return prevI, accumulator
 
-def solution2():
-    global instructions
-    instructions[210][0] = "nop" #change the last jump instruction before terminating to nop
-    solution1() #run the code again with the changed instructions
+def solution2(codes):
+    instructions_copy = [x[:] for x in codes]
+    i_to_change, _ = solution1(instructions_copy)
+    opcode = codes[i_to_change]
+    codes[i_to_change][0] = "nop" if opcode[0] == "jmp" else "jmp"
 
+    _, accumulator = solution1(codes) #run the code again with the changed instructions
+    return accumulator
 
-instructions = parseInput(f)
-solution1()
-instructions = parseInput(f)
-solution2()
+opcodes = parseInput(f)
+_, accumulator = solution1(opcodes)
+print("solution1: {}".format(accumulator))
+
+opcodes = parseInput(f)
+accumulator = solution2(opcodes)
+print("solution2: {}".format(accumulator))
