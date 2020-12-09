@@ -55,12 +55,12 @@ def solution2(needle):
 
 def timeIt():
     import time
-    t1 =time.perf_counter()
+    t1 =time.time()
     answer1 = solution1()
-    t1 = time.perf_counter() - t1
-    t2 = time.perf_counter()
+    t1 = time.time() - t1
+    t2 = time.time()
     answer2 = solution2(answer1)
-    t2 = time.perf_counter() - t2
+    t2 = time.time() - t2
     print("{} : {}".format(t1, answer1))
     print("{} : {}".format(t2, answer2))
 
