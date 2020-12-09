@@ -28,13 +28,18 @@ def solution1():
         return "No error found"
     return f[i]
 
-def solution2():
-    f = file[:]
-    needle = solution1()
-    for i in range(0,len(f)):
-        for y in range(i+2, len(f)):
+def solution2(needle):
+    f = [x for x in file if x < needle]
+    i = 0
+    while i < len(f):
+        y = i + 2
+        while y < len(f) and y != i:
             if sum(f[i:y]) == needle:
                 break
+            elif sum(f[i:y]) > needle:
+                i += 1
+            elif sum(f[i:y]) < needle:
+                y += 1
         else:
             continue
         break
@@ -48,6 +53,15 @@ def solution2():
             smallest + biggest,
             i, y)
 
+def timeIt():
+    import time
+    t1 =time.perf_counter()
+    answer1 = solution1()
+    t1 = time.perf_counter() - t1
+    t2 = time.perf_counter()
+    answer2 = solution2(answer1)
+    t2 = time.perf_counter() - t2
+    print("{} : {}".format(t1, answer1))
+    print("{} : {}".format(t2, answer2))
 
-print(solution1())
-print(solution2())
+timeIt()
