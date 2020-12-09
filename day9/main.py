@@ -8,7 +8,6 @@ preamble = int(sys.argv[2])
 
 file = FileRead.ReadInput(file_name, True)
 
-
 def checkValue(value, lastNumbers):
     for i in lastNumbers:
         remainder = value - i
