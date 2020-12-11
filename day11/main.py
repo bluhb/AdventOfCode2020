@@ -167,6 +167,8 @@ def timeIt(func):
 if VISUALIZE:
     screen, font = initVisual()
 
+input("start simulation")
+
 t1 = timeIt(solution1)
 input("continue")
 t2 = timeIt(solution2)
