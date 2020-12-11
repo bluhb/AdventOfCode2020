@@ -93,6 +93,7 @@ def solution2():
                 IDtoPlace[ID] = [i, x]
     if VISUALIZE:
         visualize(IDtoPlace, init = True)
+        input("start")
 
     Free = [x for x in AllIds if (x not in IDs)]
     for i in range(0,len(IDs) - 1):
