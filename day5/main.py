@@ -5,10 +5,10 @@ import time
 
 FILENAME = "input.txt"
 F = FileRead.ReadInput(FILENAME)
-SCALEVERT = 10
+SCALEVERT = 15
 SCALEHOR = 1
 VISUALIZE = input("show simulation?") == "y"
-DOTSIZE = 2
+DOTSIZE = 5
 
 def initVisual(rows):
     pg.init()
@@ -83,12 +83,12 @@ def solution2():
         print(rowmax)
         screen, font = initVisual(rowmax)
 
-    IDs.sort()
+    # IDs.sort()
     AllIds = []
     for i in range(0,128):
         for x in range(0,8):
             ID = i*8+x
-            if IDs[0] < ID < IDs[-1]:
+            if min(IDs) < ID < max(IDs):
                 AllIds.append(ID)
                 IDtoPlace[ID] = [i, x]
     if VISUALIZE:
@@ -96,10 +96,12 @@ def solution2():
 
     Free = [x for x in AllIds if (x not in IDs)]
     for i in range(0,len(IDs) - 1):
-        if IDs[i] + 1 != IDs[i+1]:
-            result =  "your seat is {} + 1 = {}, {}".format(IDs[i], IDs[i] + 1, Free)
+        # if IDs[i] + 1 != IDs[i+1]:
+
         visualize(AllIds, coordinate=IDtoPlace[IDs[i]])
     visualize(AllIds, coordinate=IDtoPlace[IDs[-1]])
+    print(Free)
+    result =  "your seat is {} + 1 = {}".format(Free[0] - 1, Free[0])
     return result
 
 screen, font = None, None
