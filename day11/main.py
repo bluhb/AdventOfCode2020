@@ -1,6 +1,39 @@
 import FileRead
+import time
+import pygame as pg
+from os import system as sys
 
 FILENAME = "input.txt"
+VISUALIZE = input("Want to see an animation? y/n: ").upper() == "y".upper()
+SCALE = 10
+
+def initVisual():
+    pg.init()
+    temp = FileRead.ReadInput(FILENAME)
+    size = [len(temp) * SCALE + 15, (len(temp[0]) * SCALE + 60)]
+    screen = pg.display.set_mode(size)
+    screen.fill((255,255,255))
+    font = pg.font.Font('freesansbold.ttf', 32)
+    return screen, font
+
+def visualize(data):
+    global screen, font
+    for xi, x in enumerate(data):
+        for yi, y in enumerate(x):
+            if y == "#":
+                color = (255,0,0)
+            elif y == "L":
+                color = (0,255,0)
+            elif y == ".":
+                color = (255,255,255)
+            pg.draw.circle(screen, color, (xi*SCALE + 10,yi*SCALE + 50), SCALE / 2)
+    seated = sum([x.count("#") for x in data])
+    text = font.render(str(seated), True, (255,0,0), (255,255,255))
+    textRect = text.get_rect()
+    screen.blit(text, textRect)
+    pg.display.flip()
+
+    time.sleep(0.06)
 
 def checkSeat1(data, row, column): #check neighbours
     current = data[row][column]
@@ -69,6 +102,8 @@ def solution1():
     switch = {"L":"#", "#":"L"} #dict to switch symbols around
     working = []
     while working != seats:
+        if VISUALIZE:
+            visualize(seats)
         working = [x[:] for x in seats]
         for row in range(0,len(seats)):
             for column in range(0,len(seats[row])):
@@ -87,6 +122,8 @@ def solution2():
     working = []
 
     while working != data:
+        if VISUALIZE:
+            visualize(data)
         working = [x[:] for x in data]
         for row in range(0,len(data)):
             for column in range(0,len(data[0])):
@@ -122,6 +159,11 @@ def timeIt(func):
     print("")
     return t1
 
+if VISUALIZE:
+    screen, font = initVisual()
+
 t1 = timeIt(solution1)
+input("continue")
 t2 = timeIt(solution2)
 print("Total time is {}s".format(t1 + t2))
+input("continue")
