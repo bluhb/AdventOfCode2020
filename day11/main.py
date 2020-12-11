@@ -1,7 +1,6 @@
 import FileRead
 import time
 import pygame as pg
-from os import system as sys
 
 FILENAME = "input.txt"
 VISUALIZE = input("Want to see an animation? y/n: ").upper() == "y".upper()
@@ -33,22 +32,24 @@ def visualize(data):
     screen.blit(text, textRect)
     pg.display.flip()
 
-    time.sleep(0.06)
+    time.sleep(1/60)
 
 def checkSeat1(data, row, column): #check neighbours
     current = data[row][column]
     change = True
+    rowLength = len(data) #save lengths as speed improvement, faster than running len() in the loop
+    columnLength = len(data[0])
     if current == "L":
         for checkRow in range(-1, 2): #2 to include 1
             for checkColumn in range(-1, 2): #2 to include 1
                 if not checkRow and not checkColumn: #don't inlcude 0,0'
-                    continue
-                elif not change:
-                    return change
-                elif 0 <= row + checkRow < len(data) and 0 <= column + checkColumn < len(data[row]):
+                    pass
+                elif 0 <= row + checkRow < rowLength and 0 <= column + checkColumn < columnLength:
                     change &= data[row + checkRow][column + checkColumn] != "#"
                 else:
-                    continue
+                    pass
+                if not change:
+                    return change
         return change
 
     elif current == "#":
@@ -56,11 +57,11 @@ def checkSeat1(data, row, column): #check neighbours
         for checkRow in range(-1, 2): #2 to include 1
             for checkColumn in range(-1, 2): #2 to include 1
                 if not checkRow and not checkColumn: #don't inlcude 0,0'
-                    continue
-                elif 0 <= row + checkRow < len(data) and 0 <= column + checkColumn < len(data[row]):
+                    pass
+                elif 0 <= row + checkRow < rowLength and 0 <= column + checkColumn < columnLength:
                     count += 1 if data[row + checkRow][column + checkColumn] == "#" else 0
                 else:
-                    continue
+                    pass
                 if count >= 4:
                     return True
         return False
@@ -81,13 +82,15 @@ def checkSeat2(current, direction, data):
     current[1] += -1 if "l" in direction else 0
 
     #check if new current is still in the raster
+
     if not (0 <= current[0] < len(data) and 0 <= current[1] < len(data[0])):
         return 0
-    elif  data[current[0]][current[1]] == "#": #if occupied return 1
+    symbol = data[current[0]][current[1]] #speed improvement, only get the element 1 time
+    if  symbol == "#": #if occupied return 1
         return 1
-    elif data[current[0]][current[1]] == "L": #if empty seat, return 0
+    elif symbol == "L": #if empty seat, return 0
         return 0
-    elif data[current[0]][current[1]] == ".": #if no seat, call function again to check next position
+    elif symbol == ".": #if no seat, call function again to check next position
         if direction in directions:
             return checkSeat2(current, direction, data)
         else:
@@ -101,8 +104,9 @@ def solution1():
     seats = f.copy()
     switch = {"L":"#", "#":"L"} #dict to switch symbols around
     working = []
+    i = 0
     while working != seats:
-        if VISUALIZE:
+        if VISUALIZE and i%2 == 0:
             visualize(seats)
         working = [x[:] for x in seats]
         for row in range(0,len(seats)):
@@ -112,6 +116,7 @@ def solution1():
                     change = checkSeat1(working, row, column)
                     if change:
                         seats[row][column] = switch[current]
+        i+=1
     count = sum([x.count("#") for x in seats])
     return [count]
 
@@ -120,9 +125,9 @@ def solution2():
     directions = ["u", "ru", "r", "rd", "d", "ld", "l", "lu"]
     data = [list(x) for x in f]
     working = []
-
+    i = 0
     while working != data:
-        if VISUALIZE:
+        if VISUALIZE and i%2 == 0:
             visualize(data)
         working = [x[:] for x in data]
         for row in range(0,len(data)):
@@ -143,7 +148,7 @@ def solution2():
                             break
                     if occupiedSeats == 0:
                         data[row][column] = "#"
-
+        i += 1
     return [sum([x.count("#") for x in data])]
 
 
@@ -165,5 +170,5 @@ if VISUALIZE:
 t1 = timeIt(solution1)
 input("continue")
 t2 = timeIt(solution2)
-print("Total time is {}s".format(t1 + t2))
+print("Total time is {:.2f}s".format(t1 + t2))
 input("continue")
