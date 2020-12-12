@@ -7,45 +7,53 @@ import time
 FILENAME = "input.txt"
 VISUALIZE = input("Want to see an animation?")
 SCALE = 1
-
+RECTANGLESIZE = 1
+SCREENSIZE = 500
 def initVisual():
     pg.init()
     temp = FileRead.ReadInput(FILENAME)
-    size = [500,500]
+    size = [SCREENSIZE + 100,SCREENSIZE + 100]
     screen = pg.display.set_mode(size)
     screen.fill((0,0,0))
     font = pg.font.Font('freesansbold.ttf', 32)
     input("")
     return screen, font
 
-def visualize(positions, minSize, maxSize):
-    def moveOriginToMiddle(pos, minSize, maxSize, scale):
-        return [(pos[0] + abs(minSize)) * scale, (pos[1] + abs(minSize)) * scale]
+def visualize(positions, size, waypoint = None):
+    def moveOriginToMiddle(pos, normalize):
+        return [int(pos[0] * normalize) + SCREENSIZE / 2, int(pos[1] * normalize) + SCREENSIZE / 2]
 
-    global screen, font, SCALE
-    tempScreen = pg.Surface([int((abs(minSize) + maxSize) * SCALE), 
-        int((abs(minSize) + maxSize) * SCALE)])
-    tempScreen.fill((0,0,0))
-    color = (255,0,0)
+    global screen, font, SCALE, RECTANGLESIZE, SCREENSIZE
+
+    normalize = (SCREENSIZE) /  (size * 2)
+
     positions.append(positions[-1])
-    rectScale = int((abs(minSize) + maxSize) / 500) #looks inverse, but this scales the rectangles up
+    screen.fill((0,0,0))
     for i in range(0, len(positions) - 1):
-        pos = moveOriginToMiddle(positions[i], minSize, maxSize, SCALE)
-        nextPos = moveOriginToMiddle(positions[i + 1], minSize, maxSize, SCALE)
+        pos = moveOriginToMiddle(positions[i], normalize)
+        nextPos = moveOriginToMiddle(positions[i + 1], normalize)
         if i > len(positions) - 10:
             color = (255,255,255)
         else:
             color = (125,0,0)
-        pg.draw.rect(tempScreen,
+        pg.draw.rect(screen,
                 color,
                 pg.Rect(pos[0], pos[1],
-                    10 * rectScale, 10 * rectScale)
+                    RECTANGLESIZE, RECTANGLESIZE)
                 )
-        pg.draw.line(tempScreen, color, pos, nextPos, width=10*rectScale)
-    pg.transform.scale(tempScreen, (500,500), screen)
-    del(tempScreen)
+        pg.draw.line(screen, color, pos, nextPos, width=RECTANGLESIZE)
+    if waypoint:
+        waypoint[0] += positions[-1][0]
+        waypoint[1] += positions[-1][1]
+        waypoint = moveOriginToMiddle(waypoint, normalize)
+        color = (0,255,0)
+        pg.draw.rect(screen,
+                color,
+                pg.Rect(waypoint[0], waypoint[1],
+                    RECTANGLESIZE * 2, RECTANGLESIZE * 2)
+                )
     pg.display.flip()
-    time.sleep(1/30)
+    time.sleep(1/60)
 
 def readInput():
     f = FileRead.ReadInput(FILENAME)
@@ -77,21 +85,19 @@ def solution1():
     data = readInput()
     if VISUALIZE:
         positions = []
-        maxX = 250
-        maxY = 250
-        minX = -250
-        minY = -250
+        maxX = SCREENSIZE/2
+        maxY = SCREENSIZE/2
+        minX = -SCREENSIZE/2
+        minY = -SCREENSIZE/2
     for c in data:
-        print(position, direction, c, sep=" ")
         if VISUALIZE:
             maxY = position[1] if position[1] > maxY else maxY
             minY = position[1] if position[1] < minY else minY
             maxX = position[0] if position[0] > maxX else maxX
             minY = position[0] if position[0] < minX else minX
-            minSize = min(minY, minX)
-            maxSize = max(maxX, maxY)
+            Size = max(maxX, maxY, abs(minX), abs(minY))
             positions.append(position)
-            visualize(positions, minSize, maxSize)
+            visualize(positions, Size)
         command = c[0]
         value = int(c[1])
         if command == "F":
@@ -137,37 +143,35 @@ def solution2():
     data = readInput()
     if VISUALIZE:
         positions = []
-        maxX = 250
-        maxY = 250
-        minX = -250
-        minY = -250
+        maxX = SCREENSIZE/2
+        maxY = SCREENSIZE/2
+        minX = -SCREENSIZE/2
+        minY = -SCREENSIZE/2
     for c in data:
-        print(position, waypoint, c, sep=" ")
+        command = c[0]
+        value = int(c[1])
         if VISUALIZE:
             maxY = position[1] if position[1] > maxY else maxY
             minY = position[1] if position[1] < minY else minY
             maxX = position[0] if position[0] > maxX else maxX
             minY = position[0] if position[0] < minX else minX
-            minSize = min(minY, minX)
-            maxSize = max(maxX, maxY)
+            Size = max(maxX, maxY, abs(minX), abs(minY))
             positions.append(position)
-
-        command = c[0]
-        value = int(c[1])
+            visualize(positions, Size, waypoint=waypoint[:])
         if command in ["L", "R"]:
             waypoint = rotatePoint(command, value, position, waypoint)
         elif command in ["N", "E", "S", "W"]:
             waypoint = waypointFunctions[compassToDegree[command]](value)
         elif command in ["F"]:
             position = forward(value)
-    visualize(positions, minSize, maxSize)
+
     print(position, waypoint, c, sep=" ")
     manhattanDistance = abs(position[0]) + abs(position[1])
     print(manhattanDistance)
 
 if VISUALIZE:
     screen, font = initVisual()
-# solution1()
+solution1()
 input("next")
 solution2()
 input("exit")
