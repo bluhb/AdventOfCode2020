@@ -7,8 +7,8 @@ import time
 FILENAME = "input.txt"
 VISUALIZE = input("Want to see an animation?")
 SCALE = 1
-RECTANGLESIZE = 1
-SCREENSIZE = 500
+RECTANGLESIZE = 3
+SCREENSIZE = 1000
 def initVisual():
     pg.init()
     temp = FileRead.ReadInput(FILENAME)
