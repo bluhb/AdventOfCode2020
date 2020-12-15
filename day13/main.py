@@ -32,7 +32,7 @@ def solution1():
         break
     return bus * (i - arriveTime)
 
-def solution2():
+def solution2a():
     _, busses = parseInput2()
     busNumbers = [(i, int(x)) for i,x in enumerate(busses) if x!= "x"]
     print(busNumbers)
@@ -41,8 +41,30 @@ def solution2():
     for delta, bus in busNumbers:
         while (t + delta) % bus != 0:
             t += step
-        step *= bus
+        print(bus, delta, bus - delta, sep=" ")
+        step *= abs(bus - delta)
     return t
+
+def solution2():
+    _, busses = parseInput2()
+    busNumbers = {i:int(x) for i,x in enumerate(busses) if x!= "x"}
+    print(busNumbers)
+    busses = list(busNumbers.keys())
+    busses.sort()
+    step = busses[0]
+    bus = busNumbers[busses[0]]
+    z = 0
+    time = bus
+    while z < len(busses) - 1:
+        if busNumbers[busses[z]] + busses[z] % time == 0:
+            if busses[z + 1] % step == 0:
+                step = busses[z + 1] - busses[z]
+                z += 1
+            else:
+                step *= busses[z + 1] - busses[z]
+                z += 1
+        time += step
+    return time
 
 print(solution1())
 print(solution2())
