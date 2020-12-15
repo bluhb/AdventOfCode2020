@@ -13,8 +13,6 @@ def solve(endNumber):
         nextNumber = mem.get(lastNumber, 0)
         if nextNumber:
             nextNumber = i - 1 - nextNumber
-        else:
-            nextNumber = 0
         mem[lastNumber] = i - 1
         lastNumber = nextNumber
     return lastNumber
